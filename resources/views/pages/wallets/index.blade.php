@@ -15,7 +15,7 @@
                     <div class="card-body">
                         <div class="d-flex align-items-start">
                             <div class="bg-light-warning text-warning d-inline-block px-4 py-3 rounded">
-                                <i class="ti ti-wallet display-6"></i>
+                                <i class="{{ $wallet->icon_url }} display-6"></i>
                             </div>
                             <div class="ms-auto">
                                 <div class="dropdown dropstart">
@@ -44,7 +44,8 @@
                                             <a class="dropdown-item" href="#">Xem thống kê số dư</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Sửa thông tin ví</a>
+                                            <a class="dropdown-item" href="{{ route('wallets.edit', $wallet->id) }}">Sửa
+                                                thông tin ví</a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item text-danger" href="#">Xóa ví</a>

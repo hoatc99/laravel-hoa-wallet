@@ -33,7 +33,9 @@ class WalletController extends Controller
      */
     public function create()
     {
-        return view('pages.wallets.create');
+        $icons = config('icons');
+
+        return view('pages.wallets.create', compact('icons'));
     }
 
     /**
@@ -65,7 +67,9 @@ class WalletController extends Controller
      */
     public function edit(Wallet $wallet)
     {
-        return view('pages.wallets.edit', compact('wallet'));
+        $icons = config('icons');
+
+        return view('pages.wallets.edit', compact('wallet', 'icons'));
     }
 
     /**
