@@ -27,28 +27,33 @@
                                         <li>
                                             <h6 class="dropdown-header">Chọn hành động</h6>
                                         </li>
+                                        @if ($wallet->total_saving > 0)
+                                            <li>
+                                                <a class="dropdown-item"
+                                                    href="{{ route('wallets.balances.create', $wallet->id) }}">Cập nhật số
+                                                    dư</a>
+                                            </li>
+                                        @endif
                                         <li>
                                             <a class="dropdown-item"
                                                 href="{{ route('wallets.savings.create', $wallet->id) }}">Cập nhật tiết
                                                 kiệm</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item"
-                                                href="{{ route('wallets.balances.create', $wallet->id) }}">Cập nhật số
-                                                dư</a>
-                                        </li>
-                                        <li>
                                             <a class="dropdown-item" href="#">Xem lịch sử tiết kiệm</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Xem thống kê số dư</a>
+                                            <a class="dropdown-item"
+                                                href="{{ route('wallets.statistics', $wallet->id) }}">Xem thống kê</a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" href="{{ route('wallets.edit', $wallet->id) }}">Sửa
                                                 thông tin ví</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item text-danger" href="#">Xóa ví</a>
+                                            <button class="dropdown-item text-danger"
+                                                onclick="confirmDelete('{{ $wallet->name }}')">Xóa
+                                                ví</button>
                                         </li>
                                     </ul>
                                 </div>
@@ -66,11 +71,11 @@
                             </div>
                             <div class="d-flex align-items-center mt-2">
                                 <div>
-                                    <span class="fs-5 fw-semibold">{{ number_format($wallet->current_balance) }}</span>
+                                    <span class="fs-5 fw-semibold">{{ formatNumber($wallet->current_balance) }}</span>
                                     <h6 class="text-muted fs-2">Số dư</h6>
                                 </div>
                                 <div class="ms-auto">
-                                    <span class="fs-5 fw-semibold">{{ number_format($wallet->total_saving) }}</span>
+                                    <span class="fs-5 fw-semibold">{{ formatNumber($wallet->total_saving) }}</span>
                                     <h6 class="text-muted fs-2 text-end">Tiết kiệm</h6>
                                 </div>
                             </div>
@@ -81,3 +86,27 @@
         @endforeach
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        const confirmDelete = (wname) => {
+            Swal.fire({
+                title: 'Xóa ví "' + wname + '"?',
+                text: "Ví đã xóa không thể khôi phục.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Tôi đồng ý'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                }
+            })
+        }
+    </script>
+@endpush

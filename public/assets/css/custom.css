@@ -1,0 +1,9 @@
+@media (max-width: 768px) {
+    .card {
+        --bs-card-spacer-y: 15px;
+        --bs-card-spacer-x: 15px;
+    }
+    #main-wrapper[data-layout="vertical"] .app-header.fixed-header {
+        position: absolute;
+    }
+}

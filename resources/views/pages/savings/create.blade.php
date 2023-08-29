@@ -17,7 +17,8 @@
                                         <label for="input_color" class="form-label">Loại</label>
                                         <div class="bt-switch">
                                             <input type="checkbox" name="type" data-on-color="warning"
-                                                data-off-color="success" data-on-text="Tiền ra" data-off-text="Tiền vào" />
+                                                data-off-color="success" data-on-text="Tiền ra" data-off-text="Tiền vào"
+                                                required />
                                         </div>
                                     </div>
                                 </div>
@@ -25,7 +26,7 @@
                                     <div class="mb-3">
                                         <label for="input_amount" class="form-label">Số tiền</label>
                                         <input type="text" class="form-control text-end" name="amount" id="input_amount"
-                                            placeholder="Nhập số tiền" />
+                                            placeholder="Nhập số tiền" required />
                                     </div>
                                 </div>
                                 <div class="col-12">

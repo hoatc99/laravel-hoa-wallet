@@ -13,3 +13,5 @@
 <script src="{{ asset('assets/libs/bootstrap-switch/dist/js/bootstrap-switch.min.js') }}"></script>
 <script src="{{ asset('assets/libs/inputmask/dist/jquery.inputmask.min.js') }}"></script>
 <script src="{{ asset('assets/libs/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
+<script src="{{ asset('assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
+<script src="{{ asset('assets/libs/sweetalert2/dist/sweetalert2.min.js') }}"></script>

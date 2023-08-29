@@ -23,7 +23,7 @@ class StoreSavingRequest extends FormRequest
     {
         return [
             'type' => 'required|boolean',
-            'amount' => 'required|numeric',
+            'amount' => 'required|numeric|min:1000',
             'note' => 'nullable|string|max:255',
         ];
     }

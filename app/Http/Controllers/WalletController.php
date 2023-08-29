@@ -95,4 +95,9 @@ class WalletController extends Controller
 
         return redirect()->route('wallets.index');
     }
+
+    public function statistics(Wallet $wallet)
+    {
+        return view('pages.wallets.statistics', compact('wallet'));
+    }
 }
