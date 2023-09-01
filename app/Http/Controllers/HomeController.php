@@ -10,4 +10,9 @@ class HomeController extends Controller
     {
         return view('pages.index');
     }
+
+    public function table()
+    {
+        return view('pages.charts.table');
+    }
 }

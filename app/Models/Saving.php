@@ -17,6 +17,7 @@ class Saving extends Model
     protected $fillable = [
         'user_id',
         'wallet_id',
+        'date',
         'type',
         'amount',
         'note',

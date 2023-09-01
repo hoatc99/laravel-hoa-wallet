@@ -64,17 +64,21 @@
                             <h6 class="card-subtitle mb-1 text-muted">{{ round($wallet->progress) }}%</h6>
                             <div class="progress mt-4 bg-light">
                                 <div class="progress-bar"
-                                    style="width: {{ $wallet->progress }}%; height: 6px; background-color: {{ $wallet->color_hex }}"
+                                    style="width: {{ $wallet->progress }}%; height: 10px; background-color: {{ $wallet->color_hex }}"
                                     role="progressbar">
                                     <span class="sr-only">60% Complete</span>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center mt-2">
-                                <div>
+                                <div data-bs-toggle="popover" data-bs-placement="top" data-bs-container="body"
+                                    data-bs-html="true" data-bs-trigger="hover click"
+                                    data-bs-content="<strong class='fs-3'>{{ number_format($wallet->current_balance) }}</strong>">
                                     <span class="fs-5 fw-semibold">{{ formatNumber($wallet->current_balance) }}</span>
                                     <h6 class="text-muted fs-2">Số dư</h6>
                                 </div>
-                                <div class="ms-auto">
+                                <div class="ms-auto" data-bs-toggle="popover" data-bs-placement="top"
+                                    data-bs-container="body" data-bs-html="true" data-bs-trigger="hover click"
+                                    data-bs-content="<strong class='fs-3'>{{ number_format($wallet->total_saving) }}</strong>">
                                     <span class="fs-5 fw-semibold">{{ formatNumber($wallet->total_saving) }}</span>
                                     <h6 class="text-muted fs-2 text-end">Tiết kiệm</h6>
                                 </div>

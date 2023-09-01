@@ -6,7 +6,7 @@ const renderLineChart = (chartId, currentChart, series, xcategories) => {
         series: series,
         chart: {
             height: 350,
-            type: "line",
+            type: "area",
             dropShadow: {
                 enabled: true,
                 color: "#000",
@@ -26,7 +26,7 @@ const renderLineChart = (chartId, currentChart, series, xcategories) => {
         dataLabels: {
             enabled: false,
         },
-        colors: ["#fa896b", "#3dd9eb"],
+        colors: ["#3dd9eb", "#615dff"],
         stroke: {
             curve: "smooth",
         },
@@ -40,19 +40,29 @@ const renderLineChart = (chartId, currentChart, series, xcategories) => {
             },
         },
         xaxis: {
+            type: "datetime",
             categories: xcategories,
             labels: {
+                format: "dd",
                 style: {
                     colors: "#a1aab2",
                 },
+                datetimeUTC: false,
             },
-            tickAmount: 10,
         },
         yaxis: {
+            type: "currency",
             labels: {
                 formatter: function (val) {
-                    val /= 1000;
-                    return val.toLocaleString() + "K";
+                    const suffixes = ["", "K", "M", "B", "T"];
+                    let suffixIndex = 0;
+
+                    while (val >= 1000) {
+                        val /= 1000;
+                        suffixIndex++;
+                    }
+
+                    return val.toFixed(1) + suffixes[suffixIndex];
                 },
                 style: {
                     colors: "#a1aab2",
@@ -60,7 +70,32 @@ const renderLineChart = (chartId, currentChart, series, xcategories) => {
             },
         },
         tooltip: {
+            x: {
+                format: "dd/MM/yyyy",
+            },
+            y: {
+                formatter: function (val) {
+                    return val.toLocaleString();
+                },
+            },
             theme: "dark",
+        },
+        annotations: {
+            xaxis: [
+                {
+                    x: new Date().getTime(),
+                    borderColor: "#999",
+                    yAxisIndex: 0,
+                    label: {
+                        show: true,
+                        text: "Hôm nay",
+                        style: {
+                            color: "#fff",
+                            background: "#6610f2",
+                        },
+                    },
+                },
+            ],
         },
     };
 

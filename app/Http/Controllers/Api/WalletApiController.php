@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Table\WalletResource;
 use App\Models\Wallet;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
@@ -25,12 +26,12 @@ class WalletApiController extends Controller
         $days = $this->getDaysInSpecifiedMonth($year, $month);
 
         foreach ($days as $day) {
-            $saving = $savingData->where('created_at', '<', $day->endOfDay())->sum('amount');
+            $saving = $savingData->where('date', '<', $day)->sum('amount');
             $balance = $balanceData->filter(function ($item) use ($day) {
                 return Carbon::parse($item->created_at)->isSameDay($day);
             })->last()->amount ?? $balance;
 
-            $data['days'][] = $day->toDAteString();
+            $data['days'][] = $day;
             $data['savings'][] = $saving;
             $data['balances'][] = $balance;
         }
@@ -41,16 +42,20 @@ class WalletApiController extends Controller
     public function getDaysInSpecifiedMonth(int $year, int $month): array
     {
         $firstDayOfMonth = Carbon::create($year, $month, 1)->firstOfMonth();
-
         $lastDayOfMonth = Carbon::create($year, $month, 1)->lastOfMonth();
-
         $daysInMonth = [];
-
         while ($firstDayOfMonth->lte($lastDayOfMonth)) {
             $daysInMonth[] = $firstDayOfMonth->copy();
             $firstDayOfMonth->addDay();
         }
 
         return $daysInMonth;
+    }
+
+    public function getDataForTable(Wallet $wallet)
+    {
+        $data = WalletResource::collection($wallet->savings()->latest()->paginate());
+
+        return $this->successResponse($wallet->savings()->latest()->paginate());
     }
 }

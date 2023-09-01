@@ -19,4 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/table/{wallet}', [WalletApiController::class, 'getDataForTable']);
 Route::get('/chart/{wallet}', [WalletApiController::class, 'getDataForChart']);

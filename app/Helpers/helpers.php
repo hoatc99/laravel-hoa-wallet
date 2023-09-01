@@ -3,8 +3,14 @@
 if (! function_exists('formatNumber')) {
     function formatNumber($number)
     {
-        $number /= 1000;
+        $suffixes = ["", "K", "M", "B", "T"];
+        $suffixIndex = 0;
 
-        return number_format(round($number, 1)).'K';
+        while ($number >= 1000) {
+            $number /= 1000;
+            $suffixIndex++;
+        }
+
+        return round($number, 1) . $suffixes[$suffixIndex];
     }
 }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->constrained();
             $table->foreignIdFor(Wallet::class)->constrained();
+            $table->date('date');
             $table->boolean('type');
             $table->integer('amount');
             $table->string('note')->nullable();

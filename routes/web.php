@@ -25,6 +25,7 @@ Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('index');
 
+    Route::get('/table', [HomeController::class, 'table']);
     Route::get('/wallets/{wallet}/statistics', [WalletController::class, 'statistics'])->name('wallets.statistics');
     Route::resource('wallets.balances', BalanceController::class)->shallow();
     Route::resource('wallets.savings', SavingController::class)->shallow();

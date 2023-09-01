@@ -13,10 +13,12 @@
                             @csrf
                             <div class="row">
                                 <div class="col-12">
-                                    <div class="mb-3">
-                                        <label for="input_amount" class="form-label">Số tiền</label>
-                                        <input type="text" class="form-control text-end" name="amount" id="input_amount"
-                                            placeholder="Nhập số tiền" />
+                                    <div class="mb-3 row">
+                                        <label for="input_amount" class="col-md-2 col-form-label">Số tiền</label>
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control text-end" name="amount"
+                                                id="input_amount" placeholder="Nhập số tiền" />
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -41,46 +43,4 @@
 @endsection
 
 @push('scripts')
-    <script>
-        $(
-            ".bt-switch input[type='checkbox'], .bt-switch input[type='radio']"
-        ).bootstrapSwitch();
-        var radioswitch = (function() {
-            var bt = function() {
-                $(".radio-switch").on("switch-change", function() {
-                        $(".radio-switch").bootstrapSwitch("toggleRadioState");
-                    }),
-                    $(".radio-switch").on("switch-change", function() {
-                        $(".radio-switch").bootstrapSwitch("toggleRadioStateAllowUncheck");
-                    }),
-                    $(".radio-switch").on("switch-change", function() {
-                        $(".radio-switch").bootstrapSwitch("toggleRadioStateAllowUncheck", !1);
-                    });
-            };
-            return {
-                init: function() {
-                    bt();
-                },
-            };
-        })();
-        $(document).ready(function() {
-            radioswitch.init();
-        });
-
-        $(function(e) {
-            "use strict";
-            $("#input_amount").inputmask("currency", {
-                radixPoint: ".",
-                groupSeparator: ",",
-                digits: 0,
-                autoGroup: true,
-                suffix: ',000',
-            });
-
-            $('#input_amount').on('click focus', function() {
-                let newPosition = $('#input_amount').val().length - 3;
-                $(this)[0].setSelectionRange(newPosition, newPosition);
-            });
-        });
-    </script>
 @endpush

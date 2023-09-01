@@ -13,27 +13,42 @@
                             @csrf
                             <div class="row">
                                 <div class="col-12">
-                                    <div class="mb-3">
-                                        <label for="input_color" class="form-label">Loại</label>
-                                        <div class="bt-switch">
-                                            <input type="checkbox" name="type" data-on-color="warning"
-                                                data-off-color="success" data-on-text="Tiền ra" data-off-text="Tiền vào"
-                                                required />
+                                    <div class="mb-3 row">
+                                        <label for="input_date" class="col-md-2 col-form-label">Ngày</label>
+                                        <div class="col-md-10">
+                                            <input type="text" name="date" id="input_date"
+                                                class="form-control singledate" readonly="readonly" required />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <div class="mb-3">
-                                        <label for="input_amount" class="form-label">Số tiền</label>
-                                        <input type="text" class="form-control text-end" name="amount" id="input_amount"
-                                            placeholder="Nhập số tiền" required />
+                                    <div class="mb-3 row">
+                                        <label for="input_type" class="col-md-2 col-form-label">Loại</label>
+                                        <div class="col-md-10">
+                                            <div class="bt-switch">
+                                                <input type="checkbox" name="type" id="input_type"
+                                                    data-on-color="warning" data-off-color="success" data-on-text="Tiền ra"
+                                                    data-off-text="Tiền vào" />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <div class="mb-3">
-                                        <label for="textarea_note" class="form-label">Ghi chú</label>
-                                        <input type="text" class="form-control" name="note" id="textarea_note"
-                                            placeholder="Nhập ghi chú">
+                                    <div class="mb-3 row">
+                                        <label for="input_amount" class="col-md-2 col-form-label">Số tiền</label>
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control text-end" name="amount"
+                                                id="input_amount" placeholder="Nhập số tiền" required />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="mb-3 row">
+                                        <label for="textarea_note" class="col-md-2 col-form-label">Ghi chú</label>
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control" name="note" id="textarea_note"
+                                                placeholder="Nhập ghi chú">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -62,42 +77,24 @@
         $(
             ".bt-switch input[type='checkbox'], .bt-switch input[type='radio']"
         ).bootstrapSwitch();
-        var radioswitch = (function() {
-            var bt = function() {
-                $(".radio-switch").on("switch-change", function() {
+        let radioswitch = (() => {
+            return {
+                init: () => {
+                    $(".radio-switch").on("switch-change", () => {
                         $(".radio-switch").bootstrapSwitch("toggleRadioState");
-                    }),
-                    $(".radio-switch").on("switch-change", function() {
+                    });
+                    $(".radio-switch").on("switch-change", () => {
                         $(".radio-switch").bootstrapSwitch("toggleRadioStateAllowUncheck");
-                    }),
-                    $(".radio-switch").on("switch-change", function() {
+                    });
+                    $(".radio-switch").on("switch-change", () => {
                         $(".radio-switch").bootstrapSwitch("toggleRadioStateAllowUncheck", !1);
                     });
-            };
-            return {
-                init: function() {
-                    bt();
                 },
             };
         })();
-        $(document).ready(function() {
+
+        $(() => {
             radioswitch.init();
-        });
-
-        $(function(e) {
-            "use strict";
-            $("#input_amount").inputmask("currency", {
-                radixPoint: ".",
-                groupSeparator: ",",
-                digits: 0,
-                autoGroup: true,
-                suffix: ',000',
-            });
-
-            $('#input_amount').on('click focus', function() {
-                let newPosition = $('#input_amount').val().length - 3;
-                $(this)[0].setSelectionRange(newPosition, newPosition);
-            });
         });
     </script>
 @endpush

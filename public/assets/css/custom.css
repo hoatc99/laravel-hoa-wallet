@@ -7,3 +7,7 @@
         position: absolute;
     }
 }
+
+.bootstrap-switch {
+    margin-bottom: 0;
+}

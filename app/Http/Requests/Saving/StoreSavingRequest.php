@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Saving;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSavingRequest extends FormRequest
@@ -22,6 +23,7 @@ class StoreSavingRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'date' => 'required|date',
             'type' => 'required|boolean',
             'amount' => 'required|numeric|min:1000',
             'note' => 'nullable|string|max:255',
@@ -34,6 +36,7 @@ class StoreSavingRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
+            'date' => Carbon::createFromFormat('d/m/Y', $this->input('date'))->toDateString(),
             'amount' => intval(str_replace(',', '', $this->input('amount'))),
             'type' => $this->input('type') === 'on',
         ]);
