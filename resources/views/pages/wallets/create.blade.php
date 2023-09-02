@@ -8,7 +8,7 @@
     </div>
 
     <div class="row">
-        <div class="col-12">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title fw-semibold mb-4">Nhập thông tin ví</h5>
@@ -17,8 +17,8 @@
                         <div class="mb-3 row">
                             <label for="input_name" class="col-md-2 col-form-label">Tên ví</label>
                             <div class="col-md-10">
-                                <input type="text" class="form-control" name="name" id="input_name"
-                                    placeholder="Nhập tên ví">
+                                <input type="text" class="form-control" name="name" id="input_name" maxlength="20"
+                                    placeholder="Nhập tên ví" value="Ví " required>
                             </div>
                         </div>
                         <div class="mb-3 row">
@@ -31,7 +31,8 @@
                         <div class="mb-3 row">
                             <label for="input_icon" class="col-md-2 col-form-label">Biểu tượng</label>
                             <div class="col-md-10">
-                                <select class="selectpicker w-100" name="icon_url" data-live-search="true" required>
+                                <select class="selectpicker w-100" name="icon_url" id="input_icon" data-live-search="true"
+                                    required>
                                     @foreach ($icons as $icon)
                                         <option data-icon="{{ $icon }} me-2" value="{{ $icon }}">
                                             {{ $icon }}</option>
@@ -55,5 +56,49 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title fw-semibold mb-4">Xem trước</h5>
+                    <div class="card card-hover border border-2" id="wallet_color">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start">
+                                <div class="bg-light-warning text-warning d-inline-block px-4 py-3 rounded"
+                                    id="wallet_icon"></div>
+                            </div>
+                            <div class="mt-4">
+                                <h4 class="card-title" id="wallet_name"></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $(() => {
+            load_wallet_preview();
+        });
+
+        $('#input_icon').on('change', () => {
+            load_wallet_preview();
+        });
+
+        $('#input_color').on('input', () => {
+            load_wallet_preview();
+        });
+
+        $('#input_name').on('input', () => {
+            load_wallet_preview();
+        });
+
+        const load_wallet_preview = () => {
+            $('#wallet_color').attr('style', `border-color: ${$('#input_color').val()} !important;`);
+            $('#wallet_icon').html(`<i class="${$('#input_icon').val()} display-6"></i>`);
+            $('#wallet_name').text($('#input_name').val());
+        }
+    </script>
+@endpush

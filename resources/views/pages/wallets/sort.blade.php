@@ -6,14 +6,14 @@
     <div class="action-btn layout-top-spacing mb-7 d-flex align-items-center justify-content-between">
         <h5 class="mb-0 fs-5 fw-semibold">Danh sách ví</h5>
         <div>
-            <a href="{{ route('wallets.create') }}" class="btn btn-warning">Sắp xếp thứ tự ví</a>
+            <button class="btn btn-warning">Sắp xếp thứ tự ví</button>
             <a href="{{ route('wallets.create') }}" class="btn btn-primary">Tạo ví mới</a>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" id="sortable">
         @foreach ($wallets as $wallet)
-            <div class="col-md-6 col-lg-4">
+            <div class="col-md-6 col-lg-4" data-id="{{ $wallet->id }}">
                 <div class="card card-hover border border-2" style="border-color: {{ $wallet->color_hex }} !important">
                     <div class="card-body">
                         <div class="d-flex align-items-start">
@@ -119,5 +119,20 @@
                 }
             })
         }
+
+        new Sortable(sortable, {
+            animation: 150,
+            ghostClass: 'blue-background-class',
+            onEnd: function(evt) {
+                var newOrder = [];
+                $('#sortable > div').each(function() {
+                    var id = $(this).data('id');
+                    newOrder.push(id);
+                });
+
+                // newOrder bây giờ chứa danh sách thứ tự mới của các phần tử
+                console.log(newOrder);
+            }
+        });
     </script>
 @endpush

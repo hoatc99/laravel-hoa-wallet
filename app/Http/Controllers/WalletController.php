@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Wallet\StoreWalletRequest;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,7 @@ class WalletController extends Controller
      */
     public function index()
     {
-        $wallets = Auth::user()->wallets;
+        $wallets = Auth::user()->wallets()->orderBy('wallet_order')->get();
         foreach ($wallets as $wallet) {
             $savings = $wallet->savings;
             $total_saving = 0;
@@ -41,11 +42,10 @@ class WalletController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreWalletRequest $request)
     {
         try {
-            $wallet = Wallet::create($request->all());
-
+            $wallet = Wallet::create($request->validated());
             Auth::user()->wallets()->syncWithoutDetaching($wallet);
 
             return redirect()->route('wallets.index');
@@ -99,5 +99,27 @@ class WalletController extends Controller
     public function statistics(Wallet $wallet)
     {
         return view('pages.wallets.statistics', compact('wallet'));
+    }
+
+    public function histories(Wallet $wallet)
+    {
+        return view('pages.wallets.histories', compact('wallet'));
+    }
+
+    public function sort()
+    {
+        $wallets = Auth::user()->wallets()->orderBy('wallet_order')->get();
+        foreach ($wallets as $wallet) {
+            $savings = $wallet->savings;
+            $total_saving = 0;
+            foreach ($savings as $saving) {
+                $total_saving = $total_saving + $saving->amount * ($saving->type ? -1 : 1);
+            }
+            $wallet->total_saving = $total_saving;
+            $wallet->current_balance = $wallet->balances()->latest()->first()->amount ?? 0;
+            $wallet->progress = $wallet->total_saving > 0 ? $wallet->current_balance / $wallet->total_saving * 100 : 0;
+        }
+
+        return view('pages.wallets.sort', compact('wallets'));
     }
 }

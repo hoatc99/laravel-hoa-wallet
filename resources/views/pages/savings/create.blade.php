@@ -17,7 +17,7 @@
                                         <label for="input_date" class="col-md-2 col-form-label">Ngày</label>
                                         <div class="col-md-10">
                                             <input type="text" name="date" id="input_date"
-                                                class="form-control singledate" readonly="readonly" required />
+                                                class="form-control date-picker" readonly="readonly" required />
                                         </div>
                                     </div>
                                 </div>
@@ -37,7 +37,7 @@
                                     <div class="mb-3 row">
                                         <label for="input_amount" class="col-md-2 col-form-label">Số tiền</label>
                                         <div class="col-md-10">
-                                            <input type="text" class="form-control text-end" name="amount"
+                                            <input type="text" class="form-control input-money" name="amount"
                                                 id="input_amount" placeholder="Nhập số tiền" required />
                                         </div>
                                     </div>

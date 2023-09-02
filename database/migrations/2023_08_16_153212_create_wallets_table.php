@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('wallets', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name', 20);
             $table->boolean('is_public')->default(0);
-            $table->string('color_hex');
-            $table->string('icon_url');
+            $table->string('color_hex', 10);
+            $table->string('icon_url', 50);
             $table->timestamps();
         });
     }

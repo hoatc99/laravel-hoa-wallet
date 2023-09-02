@@ -11,3 +11,11 @@
 .bootstrap-switch {
     margin-bottom: 0;
 }
+
+.datepicker-dropdown {
+    z-index: 15 !important;
+}
+
+.input-money {
+    text-align: right;
+}

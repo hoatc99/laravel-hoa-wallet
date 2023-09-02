@@ -9,63 +9,47 @@
 <script src="{{ asset('assets/js/sidebarmenu.js') }}"></script>
 <script src="{{ asset('assets/js/custom.js') }}"></script>
 <!--  lib files -->
-<script src="{{ asset('assets/libs/@claviska/jquery-minicolors/jquery.minicolors.min.js') }}"></script>
 <script src="{{ asset('assets/libs/bootstrap-switch/dist/js/bootstrap-switch.min.js') }}"></script>
 <script src="{{ asset('assets/libs/inputmask/dist/jquery.inputmask.min.js') }}"></script>
 <script src="{{ asset('assets/libs/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
 <script src="{{ asset('assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
 <script src="{{ asset('assets/libs/sweetalert2/dist/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('assets/libs/bootstrap-material-datetimepicker/node_modules/moment/moment.js') }}"></script>
-<script src="{{ asset('assets/libs/daterangepicker/daterangepicker.js') }}"></script>
+<script src="{{ asset('assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ asset('assets/libs/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js') }}"></script>
+<script src="{{ asset('assets/libs/sortablejs/sortable.min.js') }}"></script>
 
 <script>
     $(() => {
         "use strict";
-        $("#input_amount").inputmask("currency", {
+        $(".input-money").inputmask("currency", {
             radixPoint: ".",
             groupSeparator: ",",
             digits: 0,
             autoGroup: true,
             suffix: ',000',
         }).on('click focus', function() {
-            let newPosition = $('#input_amount').val().length - 3;
-            $(this)[0].setSelectionRange(newPosition, newPosition);
+            let pos = $('.input-money').val().length - 3;
+            $(this)[0].setSelectionRange(pos, pos);
         });
 
-        $(".singledate").daterangepicker({
-            singleDatePicker: true,
-            showDropdowns: true,
-            autoApply: true,
-            locale: {
-                format: 'DD/MM/YYYY',
-                "daysOfWeek": [
-                    "CN",
-                    "Hai",
-                    "Ba",
-                    "Tư",
-                    "Năm",
-                    "Sáu",
-                    "Bảy"
-                ],
-                monthNames: [
-                    "Tháng Một",
-                    "Tháng Hai",
-                    "Tháng Ba",
-                    "Tháng Tư",
-                    "Tháng Năm",
-                    "Tháng Sáu",
-                    "Tháng Bảy",
-                    "Tháng Tám",
-                    "Tháng Chín",
-                    "Tháng Mười",
-                    "Tháng Mười Một",
-                    "Tháng Mười Hai",
-                ],
-                firstDay: 1,
-            },
-            minDate: "01/01/2021",
-            maxDate: moment(),
-        });
+        $(".date-picker").datepicker({
+            weekStart: 1,
+            language: "vi",
+            todayHighlight: true,
+            autoclose: true,
+            startDate: "01/01/2021",
+            endDate: new Date(),
+        }).datepicker("setDate", "today");
+
+        $(".year-month-picker").datepicker({
+            language: "vi",
+            format: "mm/yyyy",
+            minViewMode: 1,
+            maxViewMode: 2,
+            autoclose: true,
+            startDate: "01/2021",
+            endDate: new Date(),
+        }).datepicker("setDate", "today");
     });
 </script>

@@ -16,7 +16,7 @@
                                     <div class="mb-3 row">
                                         <label for="input_amount" class="col-md-2 col-form-label">Số tiền</label>
                                         <div class="col-md-10">
-                                            <input type="text" class="form-control text-end" name="amount"
+                                            <input type="text" class="form-control input-money" name="amount"
                                                 id="input_amount" placeholder="Nhập số tiền" />
                                         </div>
                                     </div>

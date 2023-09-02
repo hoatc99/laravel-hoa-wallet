@@ -13,27 +13,8 @@
                             <p class="card-subtitle mb-0">Biểu đồ thống kê</p>
                         </div>
                         <div class="d-flex align-items-center">
-                            <div class="fs-4">Tháng</div>
-                            <select class="form-select w-auto" id="input_month">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6</option>
-                                <option value="7">7</option>
-                                <option value="8" selected>8</option>
-                                <option value="9">9</option>
-                                <option value="10">10</option>
-                                <option value="11">11</option>
-                                <option value="12">12</option>
-                            </select>
-                            <div class="fs-4">năm</div>
-                            <select class="form-select w-auto" id="input_year">
-                                <option value="2021">2021</option>
-                                <option value="2022">2022</option>
-                                <option value="2023" selected>2023</option>
-                            </select>
+                            <input type="text" name="year_month" id="input_year_month"
+                                class="form-control year-month-picker" readonly="readonly" required />
                         </div>
                     </div>
                     <div class="row align-items-center">
@@ -53,8 +34,8 @@
         let lineChart = null;
 
         const renderChart = () => {
-            let year = $("#input_year").val();
-            let month = $("#input_month").val();
+            let year = $("#input_year_month").val().split('/')[1];
+            let month = $("#input_year_month").val().split('/')[0];
             let chartId = document.querySelector('#chart-line-basic');
 
             $.get(`/api/chart/{{ $wallet->id }}?year=${year}&month=${month}`,
@@ -75,11 +56,7 @@
                 });
         }
 
-        $("#input_year").on("change", () => {
-            renderChart();
-        });
-
-        $("#input_month").on("change", () => {
+        $("#input_year_month").on("change", () => {
             renderChart();
         });
 

@@ -26,7 +26,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('index');
 
     Route::get('/table', [HomeController::class, 'table']);
+    Route::get('/wallets/{wallet}/histories', [WalletController::class, 'histories'])->name('wallets.histories');
     Route::get('/wallets/{wallet}/statistics', [WalletController::class, 'statistics'])->name('wallets.statistics');
+    Route::get('/wallets/sort', [WalletController::class, 'sort'])->name('wallets.sort');
     Route::resource('wallets.balances', BalanceController::class)->shallow();
     Route::resource('wallets.savings', SavingController::class)->shallow();
     Route::resource('wallets', WalletController::class);
