@@ -6,6 +6,7 @@ use App\Http\Requests\Wallet\StoreWalletRequest;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class WalletController extends Controller
 {
@@ -44,12 +45,19 @@ class WalletController extends Controller
      */
     public function store(StoreWalletRequest $request)
     {
+        DB::beginTransaction();
         try {
+            $wallets = Auth::user()->wallets();
+            $wallets->increment('wallet_order');
+
             $wallet = Wallet::create($request->validated());
-            Auth::user()->wallets()->syncWithoutDetaching($wallet);
+            $wallets->syncWithoutDetaching([$wallet->id => ['wallet_order' => 1]]);
+            DB::commit();
 
             return redirect()->route('wallets.index');
         } catch (\Exception $e) {
+            DB::rollBack();
+
             return redirect()->back()->withInput();
         }
     }
@@ -106,7 +114,7 @@ class WalletController extends Controller
         return view('pages.wallets.histories', compact('wallet'));
     }
 
-    public function sort()
+    public function order()
     {
         $wallets = Auth::user()->wallets()->orderBy('wallet_order')->get();
         foreach ($wallets as $wallet) {
@@ -120,6 +128,6 @@ class WalletController extends Controller
             $wallet->progress = $wallet->total_saving > 0 ? $wallet->current_balance / $wallet->total_saving * 100 : 0;
         }
 
-        return view('pages.wallets.sort', compact('wallets'));
+        return view('pages.wallets.order', compact('wallets'));
     }
 }

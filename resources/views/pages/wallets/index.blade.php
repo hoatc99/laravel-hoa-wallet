@@ -6,7 +6,7 @@
     <div class="action-btn layout-top-spacing mb-7 d-flex align-items-center justify-content-between">
         <h5 class="mb-0 fs-5 fw-semibold">Danh sách ví</h5>
         <div>
-            <a href="{{ route('wallets.create') }}" class="btn btn-warning">Sắp xếp thứ tự ví</a>
+            <a href="{{ route('wallets.order') }}" class="btn btn-warning">Sắp xếp thứ tự ví</a>
             <a href="{{ route('wallets.create') }}" class="btn btn-primary">Tạo ví mới</a>
         </div>
     </div>

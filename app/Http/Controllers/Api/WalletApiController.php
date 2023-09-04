@@ -8,6 +8,8 @@ use App\Models\Wallet;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class WalletApiController extends Controller
 {
@@ -57,5 +59,22 @@ class WalletApiController extends Controller
         $data = WalletResource::collection($wallet->savings()->latest()->paginate());
 
         return $this->successResponse($wallet->savings()->latest()->paginate());
+    }
+
+    public function updateOrder(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $ids = $request->ids;
+            foreach ($ids as $key => $id) {
+                Auth::user()->wallets()->where('wallet_id', $id)->update(['wallet_order' => $key + 1]);
+            }
+            DB::commit();
+            return $this->successResponse(null);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return $this->errorResponse(null, 'Update failed');
+        }
     }
 }

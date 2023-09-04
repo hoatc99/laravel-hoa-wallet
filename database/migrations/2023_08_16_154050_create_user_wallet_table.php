@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('user_wallet', function (Blueprint $table) {
             $table->foreignIdFor(Wallet::class);
             $table->foreignIdFor(User::class);
+            $table->integer('wallet_order');
             $table->primary(['wallet_id', 'user_id']);
         });
     }

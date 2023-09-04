@@ -42,6 +42,14 @@
                         <span class="hide-menu">Danh sách ví</span>
                     </a>
                 </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="{{ route('wallets.order') }}" aria-expanded="false">
+                        <span>
+                            <i class="ti ti-aperture"></i>
+                        </span>
+                        <span class="hide-menu">Sắp xếp ví</span>
+                    </a>
+                </li>
                 <!-- ============================= -->
                 <!-- Apps -->
                 <!-- ============================= -->

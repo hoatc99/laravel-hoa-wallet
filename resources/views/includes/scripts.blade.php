@@ -18,6 +18,7 @@
 <script src="{{ asset('assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('assets/libs/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js') }}"></script>
 <script src="{{ asset('assets/libs/sortablejs/sortable.min.js') }}"></script>
+<script src="{{ asset('assets/libs/toastrjs/dist/js/toastr.min.js') }}"></script>
 
 <script>
     $(() => {

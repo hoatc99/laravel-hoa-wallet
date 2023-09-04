@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="{{ asset('assets/libs/sweetalert2/dist/sweetalert2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/libs/datatables.net/css/jquery.dataTables.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/libs/toastrjs/dist/css/toastr.min.css') }}">
 <!-- Core Css -->
 <link id="themeColors" rel="stylesheet" href="{{ asset('assets/css/style.min.css') }}" />
 <link id="themeColors" rel="stylesheet" href="{{ asset('assets/css/custom.css') }}" />

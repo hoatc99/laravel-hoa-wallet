@@ -83,7 +83,7 @@ const renderLineChart = (chartId, currentChart, series, xcategories) => {
         annotations: {
             xaxis: [
                 {
-                    x: new Date().getTime(),
+                    x: new Date().setHours(0),
                     borderColor: "#999",
                     yAxisIndex: 0,
                     label: {
