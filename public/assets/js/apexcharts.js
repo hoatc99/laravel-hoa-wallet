@@ -1,4 +1,7 @@
-const renderLineChart = (chartId, currentChart, series, xcategories) => {
+const xaxisFormat = ['dd', 'MM'];
+const tooltipFormat = ['dd/MM/yyyy', 'MM/yyyy'];
+
+const renderLineChart = (chartId, currentChart, series, xcategories, statisticType) => {
     if (currentChart !== null) {
         currentChart.destroy();
     }
@@ -43,7 +46,7 @@ const renderLineChart = (chartId, currentChart, series, xcategories) => {
             type: "datetime",
             categories: xcategories,
             labels: {
-                format: "dd",
+                format: xaxisFormat[statisticType],
                 style: {
                     colors: "#a1aab2",
                 },
@@ -71,7 +74,7 @@ const renderLineChart = (chartId, currentChart, series, xcategories) => {
         },
         tooltip: {
             x: {
-                format: "dd/MM/yyyy",
+                format: tooltipFormat[statisticType],
             },
             y: {
                 formatter: function (val) {
@@ -99,7 +102,7 @@ const renderLineChart = (chartId, currentChart, series, xcategories) => {
         },
     };
 
-    chart_line = new ApexCharts(chartId, options_line);
+    let chart_line = new ApexCharts(chartId, options_line);
     chart_line.render();
 
     return chart_line;

@@ -15,7 +15,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('web')->group(function () {
-    Route::post('/wallets/update-order', [WalletApiController::class, 'updateOrder']);
-    Route::get('/table/{wallet}', [WalletApiController::class, 'getDataForTable']);
-    Route::get('/chart/{wallet}', [WalletApiController::class, 'getDataForChart']);
+    Route::controller(WalletApiController::class)->prefix('wallets')->group(function () {
+        Route::post('/update-order', 'updateOrder');
+        Route::get('/{wallet}/getDataHistory', 'getDataHistory');
+        Route::get('/{wallet}/getDataChart', 'getDataChart');
+        Route::get('/{wallet}/getStatisticsByYear', 'getStatisticsByYear');
+    });
 });

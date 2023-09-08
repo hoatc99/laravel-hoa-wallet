@@ -57,11 +57,13 @@
                                             <a class="dropdown-item" href="{{ route('wallets.edit', $wallet->id) }}">Sửa
                                                 thông tin ví</a>
                                         </li>
-                                        <li>
-                                            <button class="dropdown-item text-danger"
-                                                onclick="confirmDelete('{{ $wallet->name }}')">Xóa
-                                                ví</button>
-                                        </li>
+                                        @if ($wallet->total_saving === 0)
+                                            <li>
+                                                <button class="dropdown-item text-danger"
+                                                    onclick="confirmDelete({{ $wallet->id }}, '{{ $wallet->name }}')">Xóa
+                                                    ví</button>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </div>
@@ -96,26 +98,31 @@
             </div>
         @endforeach
     </div>
+
+    <form id="frm_delete" method="post">
+        @csrf
+        @method('delete')
+    </form>
 @endsection
 
 @push('scripts')
     <script>
-        const confirmDelete = (wname) => {
+        const confirmDelete = (wallet_id, wallet_name) => {
+            console.log(wallet_id)
             Swal.fire({
-                title: 'Xóa ví "' + wname + '"?',
+                title: 'Xóa ví "' + wallet_name + '"?',
                 text: "Ví đã xóa không thể khôi phục.",
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
+                cancelButtonText: 'Không',
                 confirmButtonText: 'Tôi đồng ý'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    Swal.fire(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
+                    let actionUrl = "{{ route('wallets.destroy', ':wallet_id') }}";
+                    actionUrl = actionUrl.replace(':wallet_id', wallet_id);
+                    $('#frm_delete').attr('action', actionUrl).submit();
                 }
             })
         }
