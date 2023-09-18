@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignIdFor(Wallet::class);
             $table->foreignIdFor(User::class);
             $table->integer('wallet_order');
+            $table->boolean('is_common');
+            $table->boolean('is_hidden');
             $table->primary(['wallet_id', 'user_id']);
         });
     }

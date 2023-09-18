@@ -39,7 +39,7 @@ class BalanceController extends Controller
             ];
             Balance::create($attributes);
 
-            return redirect()->route('wallets.index');
+            return redirect()->route('wallets.index')->with('success', 'Cập nhật số dư thành công!');
         } catch (\Exception $e) {
             return redirect()->back()->withInput();
         }

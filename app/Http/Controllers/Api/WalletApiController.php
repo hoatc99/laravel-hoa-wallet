@@ -7,6 +7,7 @@ use App\Http\Resources\Table\WalletResource;
 use App\Models\Wallet;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,33 +16,7 @@ class WalletApiController extends Controller
 {
     use ApiResponser;
 
-    public function getDataChart(Request $request, Wallet $wallet)
-    {
-        $year = $request->year;
-        $month = $request->month;
-
-        $savingData = $wallet->savings;
-
-        $balanceData = $wallet->balances;
-        $balance = $balanceData->where('created_at', '<', Carbon::create($year, $month, 1))->last()->amount ?? 0;
-
-        $days = $this->getDaysInSpecifiedMonth($year, $month);
-
-        foreach ($days as $day) {
-            $saving = $savingData->where('date', '<', $day)->sum('amount');
-            $balance = $balanceData->filter(function ($item) use ($day) {
-                return Carbon::parse($item->created_at)->isSameDay($day);
-            })->last()->amount ?? $balance;
-
-            $data['days'][] = $day;
-            $data['savings'][] = $saving;
-            $data['balances'][] = $balance;
-        }
-
-        return $this->successResponse($data);
-    }
-
-    public function getDataHistory(Request $request, Wallet $wallet)
+    public function getDataHistory(Request $request, Wallet $wallet): JsonResponse
     {
         $year = $request->year ?? Carbon::today()->year;
         $month = $request->month ?? Carbon::today()->month;
@@ -53,7 +28,7 @@ class WalletApiController extends Controller
         return $this->successResponse($data);
     }
 
-    public function updateOrder(Request $request)
+    public function updateOrder(Request $request): JsonResponse
     {
         DB::beginTransaction();
         try {
@@ -62,6 +37,7 @@ class WalletApiController extends Controller
                 Auth::user()->wallets()->where('wallet_id', $id)->update(['wallet_order' => $key + 1]);
             }
             DB::commit();
+
             return $this->successResponse(null);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -83,38 +59,60 @@ class WalletApiController extends Controller
         return $daysInMonth;
     }
 
-    private function getMonthsInSpecifiedYear(int $year): array
+    private function getStatisticsByYear(Wallet $wallet, int $year): JsonResponse
     {
-        $daysInMonth = [];
-        for ($month = 1; $month <= 12; $month++) {
-            $daysInMonth[] = Carbon::create($year, $month, 1);
-        }
-
-        return $daysInMonth;
-    }
-
-    public function getStatisticsByYear(Request $request, Wallet $wallet)
-    {
-        $year = $request->year ?? Carbon::today()->year;
-
         $savingData = $wallet->savings;
 
         $balanceData = $wallet->balances;
         $balance = $balanceData->where('created_at', '<', Carbon::create($year, 1, 1))->last()->amount ?? 0;
 
-        $days = $this->getMonthsInSpecifiedYear($year);
-
-        foreach ($days as $day) {
-            $saving = $savingData->where('date', '<', $day->lastOfMonth())->sum('amount');
+        for ($month = 1; $month <= 12; $month++) {
+            $day = Carbon::create($year, $month, 1);
+            $saving = $savingData->where('date', '<', $day->copy()->lastOfMonth())->sum('amount');
             $balance = $balanceData->filter(function ($item) use ($day) {
                 return Carbon::parse($item->created_at)->isSameDay($day);
             })->last()->amount ?? $balance;
 
-            $data['days'][] = $day;
-            $data['savings'][] = $saving;
-            $data['balances'][] = $balance;
+            $data['statistics']['days'][] = $day;
+            $data['statistics']['savings'][] = $saving;
+            $data['statistics']['balances'][] = $balance;
         }
 
         return $this->successResponse($data);
+    }
+
+    private function getStatisticsByMonth(Wallet $wallet, int $year, int $month): JsonResponse
+    {
+        $savingData = $wallet->savings;
+
+        $balanceData = $wallet->balances;
+        $balance = $balanceData->where('created_at', '<', Carbon::create($year, $month, 1))->last()->amount ?? 0;
+
+        $days = $this->getDaysInSpecifiedMonth($year, $month);
+
+        foreach ($days as $day) {
+            $saving = $savingData->where('date', '<', $day)->sum('amount');
+            $balance = $balanceData->filter(function ($item) use ($day) {
+                return Carbon::parse($item->created_at)->isSameDay($day);
+            })->last()->amount ?? $balance;
+
+            $data['statistics']['days'][] = $day;
+            $data['statistics']['savings'][] = $saving;
+            $data['statistics']['balances'][] = $balance;
+        }
+
+        return $this->successResponse($data);
+    }
+
+    public function getStatistics(Request $request, Wallet $wallet): JsonResponse
+    {
+        $year = $request->year ?? Carbon::today()->year;
+        $month = $request->month;
+
+        if (! empty($month)) {
+            return $this->getStatisticsByMonth($wallet, $year, $month);
+        }
+
+        return $this->getStatisticsByYear($wallet, $year);
     }
 }

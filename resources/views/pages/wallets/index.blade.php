@@ -57,6 +57,8 @@
                                             <a class="dropdown-item" href="{{ route('wallets.edit', $wallet->id) }}">Sửa
                                                 thông tin ví</a>
                                         </li>
+                                        <button class="dropdown-item text-warning"
+                                            onclick="confirmHide({{ $wallet->id }}, '{{ $wallet->name }}')">Ẩn ví</button>
                                         @if ($wallet->total_saving === 0)
                                             <li>
                                                 <button class="dropdown-item text-danger"
@@ -103,6 +105,10 @@
         @csrf
         @method('delete')
     </form>
+
+    <form id="frm_hide" method="post">
+        @csrf
+    </form>
 @endsection
 
 @push('scripts')
@@ -123,6 +129,26 @@
                     let actionUrl = "{{ route('wallets.destroy', ':wallet_id') }}";
                     actionUrl = actionUrl.replace(':wallet_id', wallet_id);
                     $('#frm_delete').attr('action', actionUrl).submit();
+                }
+            })
+        }
+
+        const confirmHide = (wallet_id, wallet_name) => {
+            console.log(wallet_id)
+            Swal.fire({
+                title: 'Ẩn ví "' + wallet_name + '"?',
+                text: "Bạn có thể xem lại ví đã ẩn trong mục sắp xếp ví.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Không',
+                confirmButtonText: 'Tôi đồng ý'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let actionUrl = "{{ route('wallets.hide', ':wallet_id') }}";
+                    actionUrl = actionUrl.replace(':wallet_id', wallet_id);
+                    $('#frm_hide').attr('action', actionUrl).submit();
                 }
             })
         }

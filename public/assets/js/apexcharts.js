@@ -1,5 +1,7 @@
 const xaxisFormat = ['dd', 'MM'];
 const tooltipFormat = ['dd/MM/yyyy', 'MM/yyyy'];
+const annotationXAxis = [new Date().setHours(0), new Date().setDate(0)];
+const annotationXAxisLabel = ['Hôm nay', 'Tháng này'];
 
 const renderLineChart = (chartId, currentChart, series, xcategories, statisticType) => {
     if (currentChart !== null) {
@@ -86,12 +88,12 @@ const renderLineChart = (chartId, currentChart, series, xcategories, statisticTy
         annotations: {
             xaxis: [
                 {
-                    x: new Date().setHours(0),
+                    x: annotationXAxis[statisticType],
                     borderColor: "#999",
                     yAxisIndex: 0,
                     label: {
                         show: true,
-                        text: "Hôm nay",
+                        text: annotationXAxisLabel[statisticType],
                         style: {
                             color: "#fff",
                             background: "#6610f2",

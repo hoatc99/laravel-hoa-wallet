@@ -15,17 +15,7 @@ class WalletController extends Controller
      */
     public function index()
     {
-        $wallets = Auth::user()->wallets()->orderBy('wallet_order')->get();
-        foreach ($wallets as $wallet) {
-            $savings = $wallet->savings;
-            $total_saving = 0;
-            foreach ($savings as $saving) {
-                $total_saving = $total_saving + $saving->amount * ($saving->type ? -1 : 1);
-            }
-            $wallet->total_saving = $total_saving;
-            $wallet->current_balance = $wallet->balances()->latest()->first()->amount ?? 0;
-            $wallet->progress = $wallet->total_saving > 0 ? $wallet->current_balance / $wallet->total_saving * 100 : 0;
-        }
+        $wallets = $this->getWallets(false);
 
         return view('pages.wallets.index', compact('wallets'));
     }
@@ -54,7 +44,7 @@ class WalletController extends Controller
             $wallets->syncWithoutDetaching([$wallet->id => ['wallet_order' => 1]]);
             DB::commit();
 
-            return redirect()->route('wallets.index');
+            return redirect()->route('wallets.index')->with('success', 'Tạo ví mới thành công!');
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -88,7 +78,7 @@ class WalletController extends Controller
         try {
             $wallet->update($request->all());
 
-            return redirect()->route('wallets.index');
+            return redirect()->route('wallets.index')->with('success', 'Cập nhật thông tin ví thành công!');
         } catch (\Exception $e) {
             return redirect()->back()->withInput();
         }
@@ -116,7 +106,30 @@ class WalletController extends Controller
 
     public function order()
     {
-        $wallets = Auth::user()->wallets()->orderBy('wallet_order')->get();
+        $wallets = $this->getWallets(true);
+
+        return view('pages.wallets.order', compact('wallets'));
+    }
+
+    public function hide(Wallet $wallet)
+    {
+        $wallet->users()->update(['is_hidden' => true]);
+
+        return redirect()->route('wallets.order');
+    }
+
+    public function unhide(Wallet $wallet)
+    {
+        $wallet->users()->update(['is_hidden' => false]);
+
+        return redirect()->route('wallets.order');
+    }
+
+    private function getWallets($all = true)
+    {
+        $wallets = Auth::user()->wallets()->orderBy('wallet_order');
+        if (! $all) $wallets = $wallets->where('is_hidden', false);
+        $wallets = $wallets->get();
         foreach ($wallets as $wallet) {
             $savings = $wallet->savings;
             $total_saving = 0;
@@ -128,6 +141,6 @@ class WalletController extends Controller
             $wallet->progress = $wallet->total_saving > 0 ? $wallet->current_balance / $wallet->total_saving * 100 : 0;
         }
 
-        return view('pages.wallets.order', compact('wallets'));
+        return $wallets;
     }
 }

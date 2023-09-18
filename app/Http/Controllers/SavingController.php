@@ -39,7 +39,7 @@ class SavingController extends Controller
             ];
             Saving::create($attributes);
 
-            return redirect()->route('wallets.index');
+            return redirect()->route('wallets.index')->with('success', 'Thêm tiết kiệm thành công!');
         } catch (\Exception $e) {
             return redirect()->back()->withInput();
         }

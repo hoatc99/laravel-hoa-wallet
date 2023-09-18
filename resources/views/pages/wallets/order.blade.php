@@ -8,7 +8,7 @@
     </div>
 
     <div class="table-responsive">
-        <table class="table align-middle text-nowrap mb-0">
+        <table class="table align-middle text-nowrap mb-0 text-center">
             <thead>
                 <tr class="text-muted fw-semibold">
                     <th scope="col" class="col-1"></th>
@@ -17,6 +17,7 @@
                     <th scope="col" class="col-3">Số dư / Tiết kiệm</th>
                     <th scope="col" class="col-2">Tỷ lệ</th>
                     <th scope="col" class="col-2">Ngày tạo</th>
+                    <th scope="col" class="col-2">Ẩn / Hiện</th>
                 </tr>
             </thead>
             <tbody class="table-group-divider" id="sorting">
@@ -49,31 +50,64 @@
                         <td>
                             <p class="fs-3 text-dark mb-0">{{ $wallet->created_at->format('d/m/Y') }}</p>
                         </td>
+                        <td>
+                            @if ($wallet->pivot->is_hidden)
+                                <button class="btn"
+                                    onclick="confirmUnhide({{ $wallet->id }}, '{{ $wallet->name }}')"><i
+                                        class="ti ti-eye-off order-icon h4"></i></button>
+                            @else
+                                <button class="btn"
+                                    onclick="confirmHide({{ $wallet->id }}, '{{ $wallet->name }}')"><i
+                                        class="ti ti-eye order-icon h4"></i></button>
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
+
+    <form id="frm_set_visible" method="post">
+        @csrf
+    </form>
 @endsection
 
 @push('scripts')
     <script>
-        const confirmDelete = (wname) => {
+        const confirmHide = (wallet_id, wallet_name) => {
             Swal.fire({
-                title: 'Xóa ví "' + wname + '"?',
-                text: "Ví đã xóa không thể khôi phục.",
+                title: 'Ẩn ví "' + wallet_name + '"?',
+                text: "Ví đã ẩn không xuất hiện trong mục Danh sách ví.",
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
+                cancelButtonText: 'Không',
                 confirmButtonText: 'Tôi đồng ý'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    Swal.fire(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
+                    let actionUrl = "{{ route('wallets.hide', ':wallet_id') }}";
+                    actionUrl = actionUrl.replace(':wallet_id', wallet_id);
+                    $('#frm_set_visible').attr('action', actionUrl).submit();
+                }
+            })
+        }
+
+        const confirmUnhide = (wallet_id, wallet_name) => {
+            Swal.fire({
+                title: 'Hiện ví "' + wallet_name + '"?',
+                text: "Ví sẽ xuất hiện trong mục Danh sách ví.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Không',
+                confirmButtonText: 'Tôi đồng ý'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let actionUrl = "{{ route('wallets.unhide', ':wallet_id') }}";
+                    actionUrl = actionUrl.replace(':wallet_id', wallet_id);
+                    $('#frm_set_visible').attr('action', actionUrl).submit();
                 }
             })
         }
@@ -101,22 +135,10 @@
                 _token: '{{ csrf_token() }}',
                 ids: ids
             }, ).done(() => {
-                toastr.success('Cập nhật thứ tự ví thành công!', 'Thành công', {
-                    showMethod: "slideDown",
-                    hideMethod: "slideUp",
-                    timeOut: 2000,
-                    progressBar: true,
-                    closeButton: true,
-                });
+                renderToastr('success', 'Cập nhật thứ tự ví thành công!', 'Thành công');
             }).fail(() => {
                 restoreOrder();
-                toastr.error('Cập nhật thứ tự ví thất bại!', 'Lỗi', {
-                    showMethod: "slideDown",
-                    hideMethod: "slideUp",
-                    timeOut: 2000,
-                    progressBar: true,
-                    closeButton: true,
-                });
+                renderToastr('error', 'Cập nhật thứ tự ví thất bại!', 'Lỗi');
             });
         }
 

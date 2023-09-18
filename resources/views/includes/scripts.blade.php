@@ -22,6 +22,7 @@
 <!--  user customize -->
 <script src="{{ asset('assets/js/apexcharts.js') }}"></script>
 <script src="{{ asset('assets/js/datatable.js') }}"></script>
+<script src="{{ asset('assets/js/toastr.js') }}"></script>
 
 <script>
     const loadDatePicker = () => {
@@ -69,5 +70,13 @@
         });
 
         loadDatePicker();
+
+        if ({{ \Session::has('success') ? 'true' : 'false' }}) {
+            renderToastr('success', '{{ \Session::get('success') }}');
+        }
+
+        if ({{ \Session::has('error') ? 'true' : 'false' }}) {
+            renderToastr('error', '{{ \Session::get('error') }}');
+        }
     });
 </script>

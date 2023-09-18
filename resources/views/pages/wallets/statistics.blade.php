@@ -41,40 +41,38 @@
         let lineChart = null;
         let dataTable = null;
 
-        const renderChart = (year, month) => {
-            let chartId = document.querySelector('#chart-line-basic');
-
-            $.get(`/api/wallets/{{ $wallet->id }}/getDataChart?year=${year}&month=${month}`,
-                (data) => {
-                    let series = [{
-                            name: "Tiết kiệm",
-                            data: data.savings,
-                        },
-                        {
-                            name: "Số dư",
-                            data: data.balances,
-                        },
-                    ];
-
-                    let xcategories = data.days;
-
-                    lineChart = renderLineChart(chartId, lineChart, series, xcategories, $("#select_statistic_type").val());
-                });
-        }
-
-        const renderTable = (year, month) => {
-            let dataTableId = $('#table1');
-
-            dataTable = renderDataTable(dataTableId, dataTable,
-                `/api/wallets/{{ $wallet->id }}/getDataHistory?year=${year}&month=${month}`
-                );
-        }
-
-        const renderStatisticData = () => {
+        const getStatisticData = () => {
             year = $("#input_year_month").val().split('/')[0] ?? '';
             month = $("#input_year_month").val().split('/')[1] ?? '';
-            renderChart(year, month);
-            renderTable(year, month);
+            $.get(`/api/wallets/{{ $wallet->id }}/get-statistic-data?year=${year}&month=${month}`, (data) => data);
+        }
+
+        const renderChart = (data) => {
+            let chartId = document.querySelector('#chart-line-basic');
+            let statisticType = $("#select_statistic_type").val();
+            let series = [{
+                    name: "Tiết kiệm",
+                    data: data.savings,
+                },
+                {
+                    name: "Số dư",
+                    data: data.balances,
+                },
+            ];
+
+            let xcategories = data.days;
+            lineChart = renderLineChart(chartId, lineChart, series, xcategories, statisticType);
+        }
+
+        const renderTable = (data) => {
+            let dataTableId = $('#table1');
+            dataTable = renderDataTable(dataTableId, dataTable, data);
+        }
+
+        const renderStatisticData = async() => {
+            let data = await getStatisticData();
+            renderChart(data.statistics);
+            renderTable(data.histories);
         }
 
         const createDatePickerEle = (e) => {

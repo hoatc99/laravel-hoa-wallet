@@ -21,11 +21,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'authenticate'])->name('authenticate');
 Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/register', [AuthController::class, 'signup'])->name('signup');
+Route::get('/register', [AuthController::class, 'register'])->name('register');
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('index');
 
     Route::get('/table', [HomeController::class, 'table']);
+    Route::post('/wallets/{wallet}/unhide', [WalletController::class, 'unhide'])->name('wallets.unhide');
+    Route::post('/wallets/{wallet}/hide', [WalletController::class, 'hide'])->name('wallets.hide');
     Route::get('/wallets/{wallet}/histories', [WalletController::class, 'histories'])->name('wallets.histories');
     Route::get('/wallets/{wallet}/statistics', [WalletController::class, 'statistics'])->name('wallets.statistics');
     Route::get('/wallets/order', [WalletController::class, 'order'])->name('wallets.order');
