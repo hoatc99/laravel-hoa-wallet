@@ -1,7 +1,9 @@
-const renderDataTable = (dataTableId, currentDataTable, url) => {
+const renderDataTable = (dataTableId, currentDataTable, data) => {
     if (currentDataTable !== null) {
         currentDataTable.destroy();
     }
+
+    $.fn.dataTable.moment("DD/MM/YYYY");
 
     return dataTableId.DataTable({
         language: {
@@ -12,10 +14,7 @@ const renderDataTable = (dataTableId, currentDataTable, url) => {
         ordering: true,
         lengthChange: true,
         pageLength: 10,
-        ajax: {
-            url: url,
-            dataSrc: "",
-        },
+        data: data,
         responsive: true,
         columns: [
             {
@@ -25,9 +24,6 @@ const renderDataTable = (dataTableId, currentDataTable, url) => {
             {
                 title: "Ngày thực hiện",
                 data: "date",
-                render: function (data, type, full, meta) {
-                    return data.split("-").reverse().join("/");
-                },
             },
             {
                 title: "Loại",
@@ -49,7 +45,19 @@ const renderDataTable = (dataTableId, currentDataTable, url) => {
                 title: "Ghi chú",
                 data: "note",
             },
+            {
+                title: "Hành động",
+                render: function (data, type, full, meta) {
+                    return `<div><a href="#" class="btn btn-warning">Sửa</a><a href="#" class="btn btn-danger">Xóa</a><div>`;
+                },
+            }
         ],
-        order: [[0, "desc"]],
+        order: [[1, "desc"]],
+        columnDefs: [
+            {
+                targets: [1],
+                render: $.fn.dataTable.render.moment("DD/MM/YYYY"),
+            },
+        ],
     });
 };

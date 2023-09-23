@@ -16,14 +16,9 @@ class WalletApiController extends Controller
 {
     use ApiResponser;
 
-    public function getDataHistory(Request $request, Wallet $wallet): JsonResponse
+    public function getDataHistory(Wallet $wallet): JsonResponse
     {
-        $year = $request->year ?? Carbon::today()->year;
-        $month = $request->month ?? Carbon::today()->month;
-        $firstDayOfMonth = Carbon::create($year, $month, 1)->firstOfMonth();
-        $lastDayOfMonth = Carbon::create($year, $month, 1)->lastOfMonth();
-
-        $data = WalletResource::collection($wallet->savings()->whereBetween('date', [$firstDayOfMonth, $lastDayOfMonth])->get());
+        $data = WalletResource::collection($wallet->savings->sortByDesc('date'));
 
         return $this->successResponse($data);
     }
@@ -70,13 +65,17 @@ class WalletApiController extends Controller
             $day = Carbon::create($year, $month, 1);
             $saving = $savingData->where('date', '<', $day->copy()->lastOfMonth())->sum('amount');
             $balance = $balanceData->filter(function ($item) use ($day) {
-                return Carbon::parse($item->created_at)->isSameDay($day);
+                return Carbon::parse($item->created_at)->isSameMonth($day);
             })->last()->amount ?? $balance;
 
             $data['statistics']['days'][] = $day;
             $data['statistics']['savings'][] = $saving;
             $data['statistics']['balances'][] = $balance;
         }
+
+        $firstDayOfYear = Carbon::create($year, 1, 1)->firstOfMonth();
+        $lastDayOfYear = Carbon::create($year, 12, 1)->lastOfMonth();
+        $data['histories'] = WalletResource::collection($wallet->savings()->whereBetween('date', [$firstDayOfYear, $lastDayOfYear])->get());
 
         return $this->successResponse($data);
     }
@@ -100,6 +99,10 @@ class WalletApiController extends Controller
             $data['statistics']['savings'][] = $saving;
             $data['statistics']['balances'][] = $balance;
         }
+
+        $firstDayOfMonth = Carbon::create($year, $month, 1)->firstOfMonth();
+        $lastDayOfMonth = Carbon::create($year, $month, 1)->lastOfMonth();
+        $data['histories'] = WalletResource::collection($wallet->savings()->whereBetween('date', [$firstDayOfMonth, $lastDayOfMonth])->get());
 
         return $this->successResponse($data);
     }

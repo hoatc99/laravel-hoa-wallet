@@ -41,10 +41,13 @@
         let lineChart = null;
         let dataTable = null;
 
-        const getStatisticData = () => {
+        const renderStatisticData = () => {
             year = $("#input_year_month").val().split('/')[0] ?? '';
             month = $("#input_year_month").val().split('/')[1] ?? '';
-            $.get(`/api/wallets/{{ $wallet->id }}/get-statistic-data?year=${year}&month=${month}`, (data) => data);
+            $.get(`/api/wallets/{{ $wallet->id }}/get-statistic-data?year=${year}&month=${month}`, (data) => {
+                renderChart(data.statistics);
+                renderTable(data.histories);
+            });
         }
 
         const renderChart = (data) => {
@@ -67,12 +70,6 @@
         const renderTable = (data) => {
             let dataTableId = $('#table1');
             dataTable = renderDataTable(dataTableId, dataTable, data);
-        }
-
-        const renderStatisticData = async() => {
-            let data = await getStatisticData();
-            renderChart(data.statistics);
-            renderTable(data.histories);
         }
 
         const createDatePickerEle = (e) => {

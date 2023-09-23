@@ -18,7 +18,6 @@ Route::middleware('web')->group(function () {
     Route::controller(WalletApiController::class)->prefix('wallets')->group(function () {
         Route::post('/update-order', 'updateOrder');
         Route::get('/{wallet}/get-history-data', 'getDataHistory');
-        Route::get('/{wallet}/getDataChart', 'getDataChart');
         Route::get('/{wallet}/get-statistic-data', 'getStatistics');
     });
 });

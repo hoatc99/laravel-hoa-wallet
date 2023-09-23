@@ -26,8 +26,9 @@
 
         const renderTable = () => {
             let dataTableId = $('#table1');
-
-            dataTable = renderDataTable(dataTableId, dataTable, `/api/wallets/{{ $wallet->id }}/getDataHistory`);
+            $.get(`/api/wallets/{{ $wallet->id }}/get-history-data`, (data) => {
+                renderDataTable(dataTableId, dataTable, data)
+            });
         }
 
         $(() => {
